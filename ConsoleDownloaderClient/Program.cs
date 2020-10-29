@@ -46,6 +46,8 @@ namespace YTDownloaderClient
                 {'t', input => youtube.DownloadThumbnailAsync(input, "./") }
             };
 
+            Console.Title = "ConsoleDownloader";
+
             while (true)
             {
                 Console.Write("-> ");
