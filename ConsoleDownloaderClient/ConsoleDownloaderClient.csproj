@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Platforms>x64</Platforms>
     <Nullable>enable</Nullable>
+    <ApplicationIcon>Media\cah.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
