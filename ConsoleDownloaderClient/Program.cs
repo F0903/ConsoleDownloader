@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 
 using YTDownloader.Downloaders;
@@ -32,7 +28,7 @@ namespace YTDownloaderClient
 
                 if (Handlers.TryGetValue(input[i], out var f))
                     return f(input.Slice(i + 2).ToString());
-            }            
+            }
             return DefaultHandler?.Invoke(input.ToString()) ?? Task.CompletedTask;
         }
     }
@@ -55,7 +51,7 @@ namespace YTDownloaderClient
                 Console.Write("-> ");
                 ReadOnlyMemory<char> input = Console.ReadLine().AsMemory();
                 try
-                {                   
+                {
                     var t = ArgumentHandler.HandleAsync(input.Span);
                     await t;
                 }

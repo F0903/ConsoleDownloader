@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace YTDownloader.Downloaders
 {
@@ -11,4 +10,4 @@ namespace YTDownloader.Downloaders
 
         public abstract Task DownloadAudioOnlyAsync(string url, string saveDir);
     }
-} 
+}

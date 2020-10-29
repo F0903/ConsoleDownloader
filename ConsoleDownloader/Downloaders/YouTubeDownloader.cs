@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Net.Mail;
-using System.Text;
 using System.Threading.Tasks;
 
 using YoutubeExplode;
@@ -48,7 +45,7 @@ namespace YTDownloader.Downloaders
 
             using var data = await DownloadAudio(streamManifest);
             await MediaSaver.SaveAsync(MediaType.Audio, id, data);
-        }      
+        }
 
         public override async Task DownloadCombinedAsync(string url, string saveDir)
         {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using System.Threading.Tasks;
 
 namespace YTDownloader
@@ -56,7 +52,7 @@ namespace YTDownloader
                 await WriteToDiskAsync(path, stream);
             }
             return paths;
-        }       
+        }
 
         public static async Task SaveAsCombined((string title, Stream data) audio, (string title, Stream data) video, string finalName)
         {

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Http.Headers;
 using System.Reflection;
-using System.Resources;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace YTDownloader
