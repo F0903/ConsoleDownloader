@@ -27,7 +27,7 @@ namespace YTDownloaderClient
                     continue;
 
                 if (Handlers.TryGetValue(input[i], out var f))
-                    return f(input.Slice(i + 2).ToString());
+                    return f(input[(i + 2)..].ToString());
             }
             return DefaultHandler?.Invoke(input.ToString()) ?? Task.CompletedTask;
         }

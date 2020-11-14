@@ -11,7 +11,7 @@ namespace YTDownloader.Downloaders
 {
     public class YouTubeDownloader : Downloader
     {
-        private static readonly YoutubeClient client = new YoutubeClient();
+        private readonly YoutubeClient client = new YoutubeClient();
 
         async Task<Stream> DownloadAudio(StreamManifest manifest)
         {
