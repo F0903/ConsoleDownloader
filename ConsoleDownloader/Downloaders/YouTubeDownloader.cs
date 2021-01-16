@@ -15,6 +15,7 @@ namespace YTDownloader.Downloaders
 
         async Task<Stream> DownloadAudio(StreamManifest manifest)
         {
+            Console.WriteLine("Downloading audio...");
             var audioInfo = manifest.GetAudioOnly().WithHighestBitrate() ?? throw new Exception("No audio streams were found for the specified url");
             var audioStream = await client.Videos.Streams.GetAsync(audioInfo);
             return audioStream;
@@ -22,6 +23,7 @@ namespace YTDownloader.Downloaders
 
         async Task<Stream> DownloadVideo(StreamManifest streamManifest)
         {
+            Console.WriteLine("Downloading video...");
             var videoInfo = streamManifest.GetVideoOnly().WithHighestVideoQuality() ?? throw new Exception("No video streams were found for the specified url");
             var videoStream = await client.Videos.Streams.GetAsync(videoInfo);
             return videoStream;
@@ -33,6 +35,7 @@ namespace YTDownloader.Downloaders
             var video = await client.Videos.GetAsync(id);
             var thumbnailUrl = video.Thumbnails.HighResUrl;
 
+            Console.WriteLine("Downloading thumbnail...");
             using WebClient web = new WebClient();
             byte[] data = await web.DownloadDataTaskAsync(thumbnailUrl);
             await File.WriteAllBytesAsync($"{saveDir}{id}.jpg", data);

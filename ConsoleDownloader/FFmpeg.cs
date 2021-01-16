@@ -40,7 +40,7 @@ namespace YTDownloader
                 CreateNoWindow = false,
                 RedirectStandardOutput = true
             });
-            ffmpegProcess.WaitForExit();
+            (ffmpegProcess ?? throw new NullReferenceException("Could not start FFmpeg")).WaitForExit();
             return Task.CompletedTask;
         }
 
@@ -59,11 +59,12 @@ namespace YTDownloader
                 CreateNoWindow = false,
                 RedirectStandardOutput = true
             });
-            ffmpegProcess.WaitForExit();
+            (ffmpegProcess ?? throw new NullReferenceException("Could not start FFmpeg")).WaitForExit();
         }
 
         public void Dispose()
         {
+            GC.SuppressFinalize(this);
             ffmpegProcess?.Close();
             if (isFfmpegEmbedded)
                 File.Delete(FFmpegLocation);

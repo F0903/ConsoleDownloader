@@ -51,10 +51,12 @@ namespace YTDownloaderClient
             while (true)
             {
                 Console.Write("-> ");
-                ReadOnlyMemory<char> input = Console.ReadLine().AsMemory();
+                string? input = Console.ReadLine();
+                if (input == null)
+                    continue;
                 try
                 {
-                    var t = ArgumentHandler.HandleAsync(input.Span);
+                    var t = ArgumentHandler.HandleAsync(input.AsSpan());
                     await t;
                 }
                 catch (Exception ex)
