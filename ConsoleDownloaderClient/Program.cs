@@ -61,7 +61,7 @@ namespace YTDownloaderClient
                 }
                 catch (Exception ex)
                 {
-                    const int msDelay = 5000;
+                    const int msDelay = 7000;
                     Console.WriteLine($"Error: {ex.Message}\nClearing in {msDelay / 1000}s...");
                     await Task.Delay(msDelay);
                 }

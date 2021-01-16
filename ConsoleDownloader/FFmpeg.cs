@@ -28,7 +28,7 @@ namespace YTDownloader
             await stream.CopyToAsync(fs);
         }
 
-        public Task ProcessAsync(string media, string outputPath)
+        public Task ProcessAsync(string inputPath, string outputPath)
         {
             if (Path.EndsInDirectorySeparator(outputPath))
                 throw new Exception("Please specify a file path, not a directory.");
@@ -36,10 +36,14 @@ namespace YTDownloader
             ffmpegProcess = Process.Start(new ProcessStartInfo()
             {
                 FileName = FFmpegLocation,
-                Arguments = $"-y -i {media} -c:a aac {outputPath}",
+                Arguments = $"-y -i {inputPath} -c:a aac {outputPath}",
                 CreateNoWindow = false,
+                RedirectStandardInput = true,
                 RedirectStandardOutput = true
             });
+            if (ffmpegProcess == null)
+                throw new NullReferenceException("Could not start FFmpeg");
+            
             (ffmpegProcess ?? throw new NullReferenceException("Could not start FFmpeg")).WaitForExit();
             return Task.CompletedTask;
         }

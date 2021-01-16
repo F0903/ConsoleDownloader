@@ -13,20 +13,20 @@ namespace YTDownloader.Downloaders
     {
         private readonly YoutubeClient client = new YoutubeClient();
 
-        async Task<Stream> DownloadAudio(StreamManifest manifest)
+        async Task<(Stream data, string format)> DownloadAudio(StreamManifest manifest)
         {
             Console.WriteLine("Downloading audio...");
             var audioInfo = manifest.GetAudioOnly().WithHighestBitrate() ?? throw new Exception("No audio streams were found for the specified url");
             var audioStream = await client.Videos.Streams.GetAsync(audioInfo);
-            return audioStream;
+            return (audioStream, audioInfo.Container.Name);
         }
 
-        async Task<Stream> DownloadVideo(StreamManifest streamManifest)
+        async Task<(Stream data, string format)> DownloadVideo(StreamManifest streamManifest)
         {
             Console.WriteLine("Downloading video...");
             var videoInfo = streamManifest.GetVideoOnly().WithHighestVideoQuality() ?? throw new Exception("No video streams were found for the specified url");
             var videoStream = await client.Videos.Streams.GetAsync(videoInfo);
-            return videoStream;
+            return (videoStream, videoInfo.Container.Name);
         }
 
         public async override Task DownloadThumbnailAsync(string url, string saveDir)
@@ -46,8 +46,11 @@ namespace YTDownloader.Downloaders
             VideoId id = url;
             var streamManifest = await client.Videos.Streams.GetManifestAsync(id);
 
-            using var data = await DownloadAudio(streamManifest);
-            await MediaSaver.SaveAsync(MediaType.Audio, id, data);
+            var (data, format) = await DownloadAudio(streamManifest);
+            using (data)
+            {
+                await MediaSaver.SaveAsync(MediaType.Audio, id, data, format);
+            }
         }
 
         public override async Task DownloadCombinedAsync(string url, string saveDir)
@@ -58,12 +61,14 @@ namespace YTDownloader.Downloaders
             VideoId id = url;
             var streamManifest = await client.Videos.Streams.GetManifestAsync(id);
 
-            using var audio = await DownloadAudio(streamManifest);
-            using var video = await DownloadVideo(streamManifest);
-            using var aStream = audio;
-            using var vStream = video;
+            var (aData, aFormat) = await DownloadAudio(streamManifest);
+            var (vData, vFormat) = await DownloadVideo(streamManifest);
 
-            await MediaSaver.SaveAsCombined(($"{id}_video", vStream), ($"{id}_audio", aStream), id);
+            using (aData)
+            using (vData)
+            {
+                await MediaSaver.SaveAsCombined(($"{id}_audio", aData, aFormat), ($"{id}_video", vData, vFormat), id);
+            }
         }
     }
 }
