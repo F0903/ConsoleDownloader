@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 
 using YoutubeExplode;
+using YoutubeExplode.Common;
 using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.Streams;
 
@@ -11,12 +12,12 @@ namespace YTDownloader.Downloaders
 {
     public class YouTubeDownloader : Downloader
     {
-        private readonly YoutubeClient client = new YoutubeClient();
+        private readonly YoutubeClient client = new();
 
         async Task<(Stream data, string format)> DownloadAudio(StreamManifest manifest)
         {
             Console.WriteLine("Downloading audio...");
-            var audioInfo = manifest.GetAudioOnly().WithHighestBitrate() ?? throw new Exception("No audio streams were found for the specified url");
+            var audioInfo = manifest.GetAudioOnlyStreams().GetWithHighestBitrate() ?? throw new Exception("No audio streams were found for the specified url");
             var audioStream = await client.Videos.Streams.GetAsync(audioInfo);
             return (audioStream, audioInfo.Container.Name);
         }
@@ -24,7 +25,7 @@ namespace YTDownloader.Downloaders
         async Task<(Stream data, string format)> DownloadVideo(StreamManifest streamManifest)
         {
             Console.WriteLine("Downloading video...");
-            var videoInfo = streamManifest.GetVideoOnly().WithHighestVideoQuality() ?? throw new Exception("No video streams were found for the specified url");
+            var videoInfo = streamManifest.GetVideoOnlyStreams().GetWithHighestVideoQuality() ?? throw new Exception("No video streams were found for the specified url");
             var videoStream = await client.Videos.Streams.GetAsync(videoInfo);
             return (videoStream, videoInfo.Container.Name);
         }
@@ -33,10 +34,10 @@ namespace YTDownloader.Downloaders
         {
             VideoId id = url;
             var video = await client.Videos.GetAsync(id);
-            var thumbnailUrl = video.Thumbnails.HighResUrl;
+            var thumbnailUrl = video.Thumbnails.GetWithHighestResolution().Url;
 
             Console.WriteLine("Downloading thumbnail...");
-            using WebClient web = new WebClient();
+            using WebClient web = new();
             byte[] data = await web.DownloadDataTaskAsync(thumbnailUrl);
             await File.WriteAllBytesAsync($"{saveDir}{id}.jpg", data);
         }

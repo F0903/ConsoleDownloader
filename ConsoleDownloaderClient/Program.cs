@@ -35,7 +35,7 @@ namespace YTDownloaderClient
 
     class Program
     {
-        static readonly YouTubeDownloader youtube = new YouTubeDownloader();
+        static readonly YouTubeDownloader youtube = new();
 
         static async Task Main()
         {
