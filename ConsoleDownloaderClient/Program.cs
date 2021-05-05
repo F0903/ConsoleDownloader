@@ -19,7 +19,7 @@ namespace YTDownloaderClient
         {
             if (Handlers == null)
                 throw new NullReferenceException("Handlers were not initialized.");
-            for (int i = 1; i < 2; i++) //TODO: Expand to include strings as args
+            for (int i = 1; i < 2; i++)
             {
                 if (input[i - 1] != ArgSpecifier)
                     continue;
@@ -35,7 +35,7 @@ namespace YTDownloaderClient
 
     class Program
     {
-        static readonly YouTubeDownloader youtube = new YouTubeDownloader();
+        static readonly YouTubeDownloader youtube = new();
 
         static async Task Main()
         {
