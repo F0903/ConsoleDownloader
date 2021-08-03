@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace YTDownloader
+namespace ConsoleDownloaderClient
 {
     public enum MediaType
     {

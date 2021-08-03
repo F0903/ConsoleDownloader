@@ -8,7 +8,7 @@ using YoutubeExplode.Common;
 using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.Streams;
 
-namespace YTDownloader.Downloaders
+namespace ConsoleDownloaderClient.Downloaders.YouTube
 {
     public class YouTubeDownloader : Downloader
     {
@@ -32,6 +32,7 @@ namespace YTDownloader.Downloaders
 
         public async override Task DownloadThumbnailAsync(string url, string saveDir)
         {
+            Console.WriteLine("Getting video...");
             VideoId id = url;
             var video = await client.Videos.GetAsync(id);
             var thumbnailUrl = video.Thumbnails.GetWithHighestResolution().Url;
@@ -44,6 +45,7 @@ namespace YTDownloader.Downloaders
 
         public override async Task DownloadAudioOnlyAsync(string url, string saveDir)
         {
+            Console.WriteLine("Getting video...");
             VideoId id = url;
             var streamManifest = await client.Videos.Streams.GetManifestAsync(id);
 
@@ -59,6 +61,7 @@ namespace YTDownloader.Downloaders
             if (!Directory.Exists(saveDir))
                 throw new Exception("Specified save directory could not be found.");
 
+            Console.WriteLine("Getting video...");
             VideoId id = url;
             var streamManifest = await client.Videos.Streams.GetManifestAsync(id);
 

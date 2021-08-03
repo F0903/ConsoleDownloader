@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace YTDownloader.Downloaders
+namespace ConsoleDownloaderClient.Downloaders
 {
     public abstract class Downloader
     {

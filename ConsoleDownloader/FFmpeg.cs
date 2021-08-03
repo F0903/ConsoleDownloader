@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace YTDownloader
+namespace ConsoleDownloaderClient
 {
     public class FFmpeg : IDisposable
     {
@@ -43,7 +43,7 @@ namespace YTDownloader
             });
             if (ffmpegProcess == null)
                 throw new NullReferenceException("Could not start FFmpeg");
-            
+
             (ffmpegProcess ?? throw new NullReferenceException("Could not start FFmpeg")).WaitForExit();
             return Task.CompletedTask;
         }

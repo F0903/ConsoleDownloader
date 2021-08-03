@@ -2,37 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using YTDownloader.Downloaders;
+using ConsoleDownloaderClient.Downloaders.YouTube;
 
-namespace YTDownloaderClient
+namespace ConsoleDownloaderClient
 {
-    public static class ArgumentHandler
-    {
-        public delegate Task AsyncArgHandler(string argValue);
-
-        public static AsyncArgHandler? DefaultHandler { private get; set; }
-        public static IDictionary<char, AsyncArgHandler>? Handlers { private get; set; }
-
-        const char ArgSpecifier = '-';
-
-        public static Task HandleAsync(ReadOnlySpan<char> input)
-        {
-            if (Handlers == null)
-                throw new NullReferenceException("Handlers were not initialized.");
-            for (int i = 1; i < 2; i++)
-            {
-                if (input[i - 1] != ArgSpecifier)
-                    continue;
-                if (input[i + 1] != ' ')
-                    continue;
-
-                if (Handlers.TryGetValue(input[i], out var f))
-                    return f(input[(i + 2)..].ToString());
-            }
-            return DefaultHandler?.Invoke(input.ToString()) ?? Task.CompletedTask;
-        }
-    }
-
     class Program
     {
         static readonly YouTubeDownloader youtube = new();
@@ -56,8 +29,9 @@ namespace YTDownloaderClient
                     continue;
                 try
                 {
-                    var t = ArgumentHandler.HandleAsync(input.AsSpan());
-                    await t;
+                    await ArgumentHandler.HandleAsync(input.AsSpan());
+                    Console.WriteLine("\nDone!");
+                    await Task.Delay(1500);
                 }
                 catch (Exception ex)
                 {
