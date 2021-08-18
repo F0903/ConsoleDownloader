@@ -36,7 +36,7 @@ namespace ConsoleDownloaderClient
             ffmpegProcess = Process.Start(new ProcessStartInfo()
             {
                 FileName = FFmpegLocation,
-                Arguments = $"-y -i {inputPath} -c:a aac {outputPath}",
+                Arguments = $"-y -i {inputPath} {outputPath}",
                 CreateNoWindow = false,
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true

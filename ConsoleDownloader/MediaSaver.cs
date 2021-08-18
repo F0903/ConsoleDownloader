@@ -13,12 +13,12 @@ namespace ConsoleDownloaderClient
     {
         public enum AudioFormat
         {
-            mp3
+            mp3,
         }
 
         public enum VideoFormat
         {
-            mp4
+            mp4,
         }
 
         public static AudioFormat AudioSaveFormat { get; set; }
@@ -28,19 +28,22 @@ namespace ConsoleDownloaderClient
         static string GetPath(string name, MediaType type) =>
             Path.ChangeExtension(Path.Combine("./", name), type == MediaType.Audio ? AudioSaveFormat.ToString() : VideoSaveFormat.ToString());
 
+        static string GetPath(string name, string extension) =>
+            Path.ChangeExtension(Path.Combine("./", name), extension);
+
         public static async Task<string> SaveAsync(MediaType type, string name, Stream data, string inFormat, bool doNotProcess = false)
         {
             var outPath = GetPath(name, type);
-            var interPath = GetPath($"temp-{name}", type);
+            var interFormat = $".{inFormat}";
+            var interPath = GetPath($"temp-{name}", interFormat);
 
-            using var fs = File.Create(interPath);
-            await data.CopyToAsync(fs);
-            fs.Close();
+            using (var fs = File.Create(interPath))
+                await data.CopyToAsync(fs);
 
-            if (!doNotProcess && $".{inFormat}" != Path.GetExtension(interPath))
+            if (!doNotProcess && interFormat != Path.GetExtension(outPath))
             {
-                using var ffmpeg = new FFmpeg();
-                await ffmpeg.ProcessAsync(interPath, outPath);
+                using (var ffmpeg = new FFmpeg())
+                    await ffmpeg.ProcessAsync(interPath, outPath);
                 File.Delete(interPath);
             }
             else
