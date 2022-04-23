@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net5.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<Platforms>x64</Platforms>
 	</PropertyGroup>
@@ -19,7 +19,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="YoutubeExplode" Version="6.0.5" />
+		<PackageReference Include="YoutubeExplode" Version="6.1.2" />
 	</ItemGroup>
 
 </Project>

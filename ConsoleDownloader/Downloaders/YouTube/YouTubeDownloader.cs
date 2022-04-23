@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using YoutubeExplode;
@@ -38,8 +39,8 @@ namespace ConsoleDownloaderClient.Downloaders.YouTube
             var thumbnailUrl = video.Thumbnails.GetWithHighestResolution().Url;
 
             Console.WriteLine("Downloading thumbnail...");
-            using WebClient web = new();
-            byte[] data = await web.DownloadDataTaskAsync(thumbnailUrl);
+            using HttpClient web = new();
+            byte[] data = await web.GetByteArrayAsync(thumbnailUrl);
             await File.WriteAllBytesAsync($"{saveDir}{id}.jpg", data);
         }
 
