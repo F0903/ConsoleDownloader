@@ -19,7 +19,7 @@ public static class FFmpeg
         result.EnsureSuccessStatusCode();
         using var zipped = result.Content.ReadAsStream();
         using var zip = new ZipArchive(zipped);
-        zip.GetEntry("ffmpeg.exe")!.ExtractToFile(path);
+        zip.GetEntry("ffmpeg.exe")!.ExtractToFile(path, true);
     }
 
     public static void Delete()
