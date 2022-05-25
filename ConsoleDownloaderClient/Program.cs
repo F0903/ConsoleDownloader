@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using ConsoleDownloaderClient.Downloaders.YouTube;
+using ConsoleDownloader.Downloaders.YouTube;
 
 namespace ConsoleDownloaderClient
 {
@@ -21,26 +21,36 @@ namespace ConsoleDownloaderClient
 
             Console.Title = "ConsoleDownloader";
 
-            while (true)
+            Console.WriteLine("Downloading FFmpeg...");
+            await FFmpeg.DownloadAsync();
+            Console.Clear();
+            try
             {
-                Console.Write("-> ");
-                string? input = Console.ReadLine();
-                if (input == null)
-                    continue;
-                try
+                while (true)
                 {
-                    await ArgumentHandler.HandleAsync(input.AsSpan());
-                    Console.WriteLine("\nDone!");
-                    await Task.Delay(1500);
+                    Console.Write("-> ");
+                    string? input = Console.ReadLine();
+                    if (input == null)
+                        continue;
+                    try
+                    {
+                        await ArgumentHandler.HandleAsync(input.AsSpan());
+                        Console.WriteLine("\nDone!");
+                        await Task.Delay(1500);
+                    }
+                    catch (Exception ex)
+                    {
+                        const int msDelay = 7000;
+                        Console.WriteLine($"Error: {ex.Message}\nClearing in {msDelay / 1000}s...");
+                        await Task.Delay(msDelay);
+                    }
+                    Console.Clear();
                 }
-                catch (Exception ex)
-                {
-                    const int msDelay = 7000;
-                    Console.WriteLine($"Error: {ex.Message}\nClearing in {msDelay / 1000}s...");
-                    await Task.Delay(msDelay);
-                }
-                Console.Clear();
             }
+            finally
+            {
+                FFmpeg.Delete();
+            } 
         }
     }
 }

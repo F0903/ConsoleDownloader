@@ -9,7 +9,7 @@ using YoutubeExplode.Common;
 using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.Streams;
 
-namespace ConsoleDownloaderClient.Downloaders.YouTube
+namespace ConsoleDownloader.Downloaders.YouTube
 {
     public class YouTubeDownloader : Downloader
     {

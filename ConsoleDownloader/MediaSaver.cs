@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace ConsoleDownloaderClient
+namespace ConsoleDownloader
 {
     public enum MediaType
     {
@@ -42,8 +42,7 @@ namespace ConsoleDownloaderClient
 
             if (!doNotProcess && interFormat != Path.GetExtension(outPath))
             {
-                using (var ffmpeg = new FFmpeg())
-                    await ffmpeg.ProcessAsync(interPath, outPath);
+                await FFmpeg.ProcessAsync(interPath, outPath);
                 File.Delete(interPath);
             }
             else
@@ -67,9 +66,8 @@ namespace ConsoleDownloaderClient
 
         public static async Task SaveAsCombined((string title, Stream data, string inFormat) audio, (string title, Stream data, string inFormat) video, string finalName)
         {
-            var paths = await SaveAllAsync((MediaType.Audio, audio.title, audio.data, audio.inFormat), (MediaType.Video, video.title, video.data, audio.inFormat));
-            using var ffmpeg = new FFmpeg();
-            await ffmpeg.MuxAsync(paths[1], paths[0], GetPath(finalName, MediaType.Video));
+            var paths = await SaveAllAsync((MediaType.Audio, audio.title, audio.data, audio.inFormat), (MediaType.Video, video.title, video.data, audio.inFormat)); 
+            await FFmpeg.MuxAsync(paths[1], paths[0], GetPath(finalName, MediaType.Video));
             for (int i = 0; i < paths.Length; i++)
                 File.Delete(paths[i]);
         }

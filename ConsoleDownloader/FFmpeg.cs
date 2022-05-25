@@ -4,36 +4,18 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace ConsoleDownloaderClient
+namespace ConsoleDownloader
 {
-    public class FFmpeg : IDisposable
+    public static class FFmpeg
     {
-        static FFmpeg()
-        {
-            isFfmpegEmbedded = !File.Exists(FFmpegLocation);
-        }
-
         const string FFmpegLocation = "./ffmpeg.exe";
 
-        static Assembly? cachedAsm;
-        static readonly bool isFfmpegEmbedded = false;
-
-        Process? ffmpegProcess;
-
-        async Task GetEmbeddedFFmpegAsync()
-        {
-            cachedAsm ??= GetType().Assembly;
-            using var stream = cachedAsm.GetManifestResourceStream("ConsoleDownloader.ffmpeg.exe") ?? throw new Exception("Could not retrieve embedded ffmpeg.exe");
-            using var fs = File.Create(FFmpegLocation);
-            await stream.CopyToAsync(fs);
-        }
-
-        public Task ProcessAsync(string inputPath, string outputPath)
+        public static Task ProcessAsync(string inputPath, string outputPath)
         {
             if (Path.EndsInDirectorySeparator(outputPath))
                 throw new Exception("Please specify a file path, not a directory.");
 
-            ffmpegProcess = Process.Start(new ProcessStartInfo()
+            using var ffmpegProcess = Process.Start(new ProcessStartInfo()
             {
                 FileName = FFmpegLocation,
                 Arguments = $"-y -i {inputPath} {outputPath}",
@@ -42,36 +24,29 @@ namespace ConsoleDownloaderClient
                 RedirectStandardOutput = true
             });
             if (ffmpegProcess == null)
-                throw new NullReferenceException("Could not start FFmpeg");
+                throw new NullReferenceException("Could not start FFmpeg. Please make sure you have ffmpeg.exe in the root directory.");
 
-            (ffmpegProcess ?? throw new NullReferenceException("Could not start FFmpeg")).WaitForExit();
+            ffmpegProcess.WaitForExit();
             return Task.CompletedTask;
         }
 
-        public async Task MuxAsync(string videoPath, string audioPath, string outputPath)
+        public static Task MuxAsync(string videoPath, string audioPath, string outputPath)
         {
             if (Path.EndsInDirectorySeparator(outputPath))
                 throw new Exception("Please specify a file path, not a directory.");
 
-            if (isFfmpegEmbedded)
-                await GetEmbeddedFFmpegAsync();
-
-            ffmpegProcess = Process.Start(new ProcessStartInfo()
+            using var ffmpegProcess = Process.Start(new ProcessStartInfo()
             {
                 FileName = FFmpegLocation,
                 Arguments = $"-y -i {videoPath} -i {audioPath} -c:v copy -c:a aac {outputPath}",
                 CreateNoWindow = false,
                 RedirectStandardOutput = true
             });
-            (ffmpegProcess ?? throw new NullReferenceException("Could not start FFmpeg")).WaitForExit();
-        }
+            if (ffmpegProcess == null)
+                throw new NullReferenceException("Could not start FFmpeg. Please make sure you have ffmpeg.exe in the root directory.");
 
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-            ffmpegProcess?.Close();
-            if (isFfmpegEmbedded)
-                File.Delete(FFmpegLocation);
+            ffmpegProcess.WaitForExit();
+            return Task.CompletedTask;
         }
     }
 }

@@ -7,18 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="ffmpeg.exe" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<EmbeddedResource Include="ffmpeg.exe">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
-			<ExcludeFromSingleFile>false</ExcludeFromSingleFile>
-		</EmbeddedResource>
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="YoutubeExplode" Version="6.1.2" />
 	</ItemGroup>
 
