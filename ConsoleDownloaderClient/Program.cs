@@ -38,6 +38,21 @@ namespace ConsoleDownloaderClient
             Console.Clear();
         }
 
+        static async Task SetupFFmpeg()
+        {
+            if (System.IO.File.Exists(FFmpeg.Path)) 
+                return;
+
+            Console.WriteLine("Downloading FFmpeg...");
+            await FFmpeg.DownloadAsync();
+            Console.Clear();
+
+            AppDomain.CurrentDomain.ProcessExit += (sender, args) =>
+            {
+                FFmpeg.Delete();
+            };
+        }
+
         static async Task Main()
         {
             ArgumentHandler.DefaultHandler = input => youtube.DownloadCombinedAsync(input, "./");
@@ -49,17 +64,9 @@ namespace ConsoleDownloaderClient
 
             Console.Title = "ConsoleDownloader";
 
-            Console.WriteLine("Downloading FFmpeg...");
-            await FFmpeg.DownloadAsync();
-            Console.Clear();
-            try
-            {
-                while (true) await Run();
-            }
-            finally
-            {
-                FFmpeg.Delete();
-            }
+            await SetupFFmpeg();
+
+            while (true) await Run();
         }
     }
 }

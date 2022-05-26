@@ -10,8 +10,8 @@ public static class FFmpeg
 {
     const string WindowsUrl = "https://github.com/ffbinaries/ffbinaries-prebuilt/releases/download/v4.4.1/ffmpeg-4.4.1-win-64.zip";
 
-    const string path = "ffmpeg.exe";
-
+    public const string Path = "ffmpeg.exe";
+     
     public static async Task DownloadAsync()
     {
         using var http = new HttpClient();
@@ -19,11 +19,11 @@ public static class FFmpeg
         result.EnsureSuccessStatusCode();
         using var zipped = result.Content.ReadAsStream();
         using var zip = new ZipArchive(zipped);
-        zip.GetEntry("ffmpeg.exe")!.ExtractToFile(path, true);
+        zip.GetEntry("ffmpeg.exe")!.ExtractToFile(Path, false);
     }
 
     public static void Delete()
     {
-        File.Delete(path);
+        File.Delete(Path);
     }
 }
