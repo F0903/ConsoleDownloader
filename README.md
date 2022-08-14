@@ -1,3 +1,4 @@
+[![.NET](https://github.com/F0903/ConsoleDownloader/actions/workflows/dotnet.yml/badge.svg)](https://github.com/F0903/ConsoleDownloader/actions/workflows/dotnet.yml)
 # ConsoleDownloader
 A simple lightweight YouTube downloader that works from the console.
 
