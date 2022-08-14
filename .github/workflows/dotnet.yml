@@ -20,7 +20,7 @@ jobs:
         # A list of files, directories, and wildcard patterns to cache and restore
         path: "**/dotnet/"
         # An explicit key for restoring and saving the cache
-        key: "${{ RUNNER_OS }}-${{ RUNNER_ARCH }}"
+        key: "${{ runner.os }}-${{ runner.arch }}"
       
     - name: Setup .NET
       uses: actions/setup-dotnet@v2.1.0
