@@ -14,6 +14,14 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       
+    - name: Cache
+      uses: actions/cache@v3.0.7
+      with:
+        # A list of files, directories, and wildcard patterns to cache and restore
+        path: "**/dotnet/"
+        # An explicit key for restoring and saving the cache
+        key: "${{ env.RUNNER_OS }}-${{ env.RUNNER_ARCH }}"
+      
     - name: Setup .NET
       uses: actions/setup-dotnet@v2.1.0
       with:
@@ -23,10 +31,7 @@ jobs:
       run: dotnet restore
     
     - name: Build
-      run: dotnet publish -p:PublishProfile=FolderProfile --no-restore
-      
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet publish -p:PublishProfile=FolderProfile --no-restore 
       
     - name: Upload
       uses: actions/upload-artifact@v3.1.0
