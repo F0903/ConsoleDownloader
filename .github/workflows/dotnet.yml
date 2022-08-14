@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  dotnet-ver: "6.x"
+
 jobs:
   build:
 
@@ -14,21 +17,21 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       
-    - name: Cache
+    - name: Cache .NET Runtime
       uses: actions/cache@v3.0.7
       with:
         # A list of files, directories, and wildcard patterns to cache and restore
-        path: "${{ env.DOTNET_ROOT }}"
+        path: "C:/Users/runneradmin/AppData/Local/Microsoft/dotnet/"
         # An explicit key for restoring and saving the cache
-        key: "${{ runner.os }}-${{ runner.arch }}"
+        key: "${{ runner.os }}-${{ runner.arch }}-${{ env.dotnet-ver }}"
       
     - name: Setup .NET
-      uses: actions/setup-dotnet@v2.1.0
+      uses: actions/setup-dotnet@2.1.0
       with:
-        dotnet-version: 6.x 
+        dotnet-version: ${{ env.dotnet-ver }}
     
     - name: Build
-      run: "dotnet publish -p:PublishProfile=FolderProfile && echo ${{ env }}"
+      run: dotnet publish -p:PublishProfile=FolderProfile
       
     - name: Upload
       uses: actions/upload-artifact@v3.1.0
