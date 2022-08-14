@@ -23,7 +23,7 @@ jobs:
       run: dotnet restore
     
     - name: Build
-      run: dotnet build ConsoleDownloaderClient --no-restore
+      run: dotnet publish ConsoleDownloaderClient --no-restore
       
     - name: Test
       run: dotnet test --no-build --verbosity normal
