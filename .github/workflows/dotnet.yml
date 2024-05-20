@@ -8,7 +8,7 @@ on:
     branches: [ master ]
 
 env:
-  dotnet-ver: "6.x"
+  dotnet-ver: "8.x"
 
 jobs:
   build:
