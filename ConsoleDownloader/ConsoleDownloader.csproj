@@ -4,6 +4,8 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<Platforms>x64</Platforms>
+		<Version>1.0.0</Version>
+		<Authors>Frederik P.</Authors>
 	</PropertyGroup>
 
 	<ItemGroup>
