@@ -17,14 +17,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4^
       
-    - name: Cache .NET Runtime
-      uses: actions/cache@v4^
-      with:
-        # A list of files, directories, and wildcard patterns to cache and restore
-        path: "C:/Users/runneradmin/AppData/Local/Microsoft/dotnet/"
-        # An explicit key for restoring and saving the cache
-        key: "${{ runner.os }}-${{ runner.arch }}-${{ env.dotnet-ver }}"
-      
     - name: Setup .NET
       uses: actions/setup-dotnet@v4^
       with:
@@ -35,7 +27,7 @@ jobs:
 
     - name: Get version
       id: set_version
-      run: echo "version=$(./out/ConsoleDownloaderClient.exe version)" >> $GITHUB_OUTPUT
+      run: echo "version=$(./out/ConsoleDownloaderClient.exe --version)" >> $GITHUB_OUTPUT
     
     - name: Create release
       uses: softprops/action-gh-release@v2^
