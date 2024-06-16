@@ -2,10 +2,6 @@ name: .NET
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 env:
   dotnet-ver: "8.x"
@@ -16,10 +12,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       
     - name: Cache .NET Runtime
-      uses: actions/cache@v3.0.7
+      uses: actions/cache@v4.0
       with:
         # A list of files, directories, and wildcard patterns to cache and restore
         path: "C:/Users/runneradmin/AppData/Local/Microsoft/dotnet/"
@@ -27,15 +23,19 @@ jobs:
         key: "${{ runner.os }}-${{ runner.arch }}-${{ env.dotnet-ver }}"
       
     - name: Setup .NET
-      uses: actions/setup-dotnet@v2.1.0
+      uses: actions/setup-dotnet@v4.0
       with:
         dotnet-version: ${{ env.dotnet-ver }}
     
     - name: Build
-      run: dotnet publish -p:PublishProfile=FolderProfile
-      
-    - name: Upload
-      uses: actions/upload-artifact@v3.1.0
+      run: dotnet publish -p:PublishProfile=ContainedWin64
+
+    - name: Get version
+      id: set_version
+      run: echo "version=$(./ConsoleDownloaderClient/bin/**/*.exe version)" >> $GITHUB_OUTPUT
+    
+    - name: Create release
+      uses: softprops/action-gh-release@v2.0
       with:
-        name: ConsoleDownloader
-        path: "**/publish/"
+        tag_name: steps.set_version.outputs.version
+        path: "**/publish/*.exe"
