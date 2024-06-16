@@ -1,0 +1,36 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+
+env:
+  dotnet-ver: "8.x"
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - uses: actions/checkout@v4^
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4^
+      with:
+        dotnet-version: ${{ env.dotnet-ver }}
+    
+    - name: Build
+      run: dotnet publish -p:PublishProfile=ContainedWin64 --output "./out/"
+
+    - name: Get version
+      id: set_version
+      run: echo "version=$(./out/*.exe --version)" >> $GITHUB_OUTPUT
+    
+    - name: Create release
+      uses: softprops/action-gh-release@v2^
+      with:
+        tag_name: ${{ steps.set_version.outputs.version }}
+        files: "./out/*.exe"
