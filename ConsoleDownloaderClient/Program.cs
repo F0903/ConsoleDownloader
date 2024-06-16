@@ -123,6 +123,9 @@ public static class Program
                     case "--finish-update":
                         oldAppPath = args[i + 1];
                         break;
+                    case "--version":
+                        Console.Write(Updater.CurrentVersion);
+                        return;
                     default:
                         break;
                 }
