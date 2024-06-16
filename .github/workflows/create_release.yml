@@ -33,4 +33,4 @@ jobs:
       uses: softprops/action-gh-release@v2^
       with:
         tag_name: ${{ steps.set_version.outputs.version }}
-        path: "./out/*.exe"
+        files: "./out/*.exe"
