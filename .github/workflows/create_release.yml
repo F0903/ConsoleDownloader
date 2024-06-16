@@ -12,10 +12,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4^
       
     - name: Cache .NET Runtime
-      uses: actions/cache@v4.0
+      uses: actions/cache@v4^
       with:
         # A list of files, directories, and wildcard patterns to cache and restore
         path: "C:/Users/runneradmin/AppData/Local/Microsoft/dotnet/"
@@ -23,7 +23,7 @@ jobs:
         key: "${{ runner.os }}-${{ runner.arch }}-${{ env.dotnet-ver }}"
       
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4.0
+      uses: actions/setup-dotnet@v4^
       with:
         dotnet-version: ${{ env.dotnet-ver }}
     
@@ -35,7 +35,7 @@ jobs:
       run: echo "version=$(./ConsoleDownloaderClient/bin/**/*.exe version)" >> $GITHUB_OUTPUT
     
     - name: Create release
-      uses: softprops/action-gh-release@v2.0
+      uses: softprops/action-gh-release@v2^
       with:
         tag_name: steps.set_version.outputs.version
         path: "**/publish/*.exe"
