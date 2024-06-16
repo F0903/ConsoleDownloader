@@ -27,10 +27,10 @@ jobs:
 
     - name: Get version
       id: set_version
-      run: echo "version=$(./out/ConsoleDownloaderClient.exe --version)" >> $GITHUB_OUTPUT
+      run: echo "version=$(./out/*.exe --version)" >> $GITHUB_OUTPUT
     
     - name: Create release
       uses: softprops/action-gh-release@v2^
       with:
         tag_name: ${{ steps.set_version.outputs.version }}
-        path: "**/publish/*.exe"
+        path: "./out/*.exe"
