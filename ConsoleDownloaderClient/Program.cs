@@ -37,7 +37,8 @@ public static class Program
                         break;
                     case "--version":
                         Console.Write(Updater.CurrentVersion);
-                        return;
+                        Environment.Exit(0);
+                        break;
                     default:
                         break;
                 }
