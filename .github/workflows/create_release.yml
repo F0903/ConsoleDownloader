@@ -23,7 +23,7 @@ jobs:
         dotnet-version: ${{ env.dotnet-ver }}
     
     - name: Build
-      run: dotnet publish -p:PublishProfile=ContainedWin64 --output "./out/"
+      run: dotnet publish -p:PublishProfile=Win64 --output "./out/"
 
     - name: Get version
       id: set_version
