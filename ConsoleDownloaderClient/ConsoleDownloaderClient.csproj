@@ -8,8 +8,7 @@
 		<ApplicationIcon>Media\cah.ico</ApplicationIcon>
 		<Version>2.1.0</Version>
 		<Authors>Frederik P.</Authors>
-		<PublishAot>False</PublishAot>
-	</PropertyGroup>
+  </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
 	  <DefineConstants>DEBUG;TRACE</DefineConstants>
