@@ -1,114 +1,26 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-
-using ConsoleDownloader.Downloaders.YouTube;
-using ConsoleDownloaderClient;
+using ConsoleDownloaderClient.CommandFramework;
 
 namespace ConsoleDownloaderClient;
 public static class Program
 {
-    static void SetupCommands()
+    static async Task HandleUpdatesAsync(string? oldAppPath)
     {
-        var youtube = new YouTubeDownloader();
-        AsyncCommandHandler.RegisterCommands(
-            new(
-                "download",
-                "Downloads media.\nOptions:\n-a Audio only\n-t Thumbnail only",
-                async (args) =>
-                {
-                    if (!FFmpeg.Downloaded)
-                        await SetupFFmpeg();
-
-                    string? url = null;
-                    bool audioOnly = false;
-                    bool thumbnailOnly = false;
-                    for (int i = 0; i < args.Length; i++)
-                    {
-                        var arg = args[i];
-                        switch (arg)
-                        {
-                            case "-a":
-                                audioOnly = true;
-                                continue;
-                            case "-t":
-                                thumbnailOnly = true;
-                                continue;
-                            default:
-                                url = arg;
-                                break;
-                        }
-                    }
-                    if (audioOnly && thumbnailOnly)
-                        throw new Exception("Cannot use both audio and thumbnail switch at the same time!");
-                    if (url is null)
-                        throw new NullReferenceException("No url specified!");
-
-                    if (audioOnly)
-                        await youtube.DownloadAudioOnlyAsync(url, "./");
-                    else if (thumbnailOnly)
-                        await youtube.DownloadThumbnailAsync(url, "./");
-                    else
-                        await youtube.DownloadCombinedAsync(url, "./");
-                }
-            ),
-            new(
-                "version",
-                "Gets the version number of the app.",
-                (args) =>
-                {
-                    Console.Write(Updater.CurrentVersion);
-                    return Task.CompletedTask;
-                }
-            ),
-            new(
-                "help",
-                "Prints commands.",
-                (args) =>
-                {
-                    Console.WriteLine("Commands:\n");
-                    var commands = AsyncCommandHandler.GetCommands();
-                    foreach (var cmdPair in commands)
-                    {
-                        var cmd = cmdPair.Value;
-                        Console.WriteLine($"{cmd.Name}\n{cmd.Description}");
-                        Console.WriteLine();
-                    }
-                    return Task.CompletedTask;
-                }
-            ),
-            new(
-                "clear",
-                "Clears the console.",
-                (args) =>
-                {
-                    Console.Clear();
-                    return Task.CompletedTask;
-                }
-            )
-        );
-    }
-
-    static async Task SetupFFmpeg()
-    {
-        Console.WriteLine("Downloading FFmpeg...");
         try
         {
-            await FFmpeg.EnsureAvailableAsync();
-            Console.Clear();
+            if (oldAppPath is not null)
+                await Updater.FinishUpdate(oldAppPath);
+            else
+                await Updater.CheckUpdateAsync();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error downloading ffmpeg!\n{ex}");
+            Console.WriteLine(ex.Message);
         }
-
-        AppDomain.CurrentDomain.ProcessExit += (sender, args) =>
-        {
-            FFmpeg.Delete();
-        };
     }
 
-    static async Task Main(string[] args)
+    static async Task Setup(string[] args)
     {
         Console.Title = "ConsoleDownloader";
 
@@ -132,20 +44,14 @@ public static class Program
             }
         }
 
-        try
-        {
-            if (oldAppPath is not null)
-                await Updater.FinishUpdate(oldAppPath);
-            else
-                await Updater.CheckUpdateAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        await HandleUpdatesAsync(oldAppPath);
+    }
 
-        SetupCommands();
-        await AsyncCommandHandler.ExecuteCommandAsync("help", []);
+    static async Task Main(string[] args)
+    {
+        await Setup(args);
+
+        await AsyncCommandRegistry.ExecuteCommandAsync("help", []);
         while (true)
         {
             Console.Write("-> ");
@@ -155,7 +61,7 @@ public static class Program
             try
             {
                 var splitArgs = input.Split(' ');
-                await AsyncCommandHandler.ExecuteCommandAsync(splitArgs[0], splitArgs[1..]);
+                await AsyncCommandRegistry.ExecuteCommandAsync(splitArgs[0], splitArgs[1..]);
             }
             catch (Exception ex)
             {

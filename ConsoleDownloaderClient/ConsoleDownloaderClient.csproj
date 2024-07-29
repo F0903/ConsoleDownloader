@@ -6,8 +6,9 @@
 		<Platforms>x64</Platforms>
 		<Nullable>enable</Nullable>
 		<ApplicationIcon>Media\cah.ico</ApplicationIcon>
-		<Version>2.0.0</Version>
+		<Version>2.1.0</Version>
 		<Authors>Frederik P.</Authors>
+		<PublishAot>False</PublishAot>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

@@ -44,6 +44,7 @@ public static class Updater
             var (remoteVersion, newVersionUrl) = await GetRemoteVersionAsync(http);
             if (remoteVersion <= CurrentVersion)
             {
+                Console.WriteLine("No new version found.\n");
                 return;
             }
 
@@ -91,7 +92,7 @@ public static class Updater
             try
             {
                 File.Delete(oldPath);
-                Console.WriteLine("Update successful!");
+                Console.WriteLine("Update successful!\n");
                 return;
             }
             catch (AccessViolationException)
